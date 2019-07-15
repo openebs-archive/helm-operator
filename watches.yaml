@@ -1,0 +1,5 @@
+---
+- version: v1alpha1
+  group: openebs.io
+  kind: OpenEBSInstallTemplate
+  chart: /opt/helm/helm-charts/openebs

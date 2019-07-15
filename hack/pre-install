@@ -1,0 +1,5 @@
+#!/bin/bash
+set -e
+
+echo 'Change the OPENEBS_IO_INSTALLER ENV values from "charts-helm" to "operator-hub"'
+find ../. -type f -name "*.yaml" -print0 | xargs -0 grep -l "charts-helm" | xargs sed -i s/charts-helm/operator-hub/g

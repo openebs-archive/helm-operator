@@ -1,0 +1,30 @@
+#!/bin/bash
+set -e
+
+if [ -z "${REPONAME}" ]
+then 
+  REPONAME="openebs"
+fi
+
+if [ -z "${IMGNAME}" ] || [ -z "${IMGTAG}" ]; 
+then
+  echo "Image details are missing. Nothing to push."; 
+  exit 1
+fi
+
+IMAGEID=$( sudo docker images -q ${REPONAME}/${IMGNAME}:${IMGTAG} )
+
+if [ ! -z "${DNAME}" ] && [ ! -z "${DPASS}" ]; 
+then 
+  sudo docker login -u "${DNAME}" -p "${DPASS}";
+
+  echo "Pushing versioned image ${REPONAME}/${IMGNAME}:${IMGTAG} ..."; 
+  sudo docker push ${REPONAME}/${IMGNAME}:${IMGTAG} ;
+
+  sudo docker tag ${IMAGEID} ${REPONAME}/${IMGNAME}:ci ;
+  echo "Pushing versioned image ${REPONAME}/${IMGNAME}:ci ...";
+  sudo docker push ${REPONAME}/${IMGNAME}:ci ;
+  
+else
+  echo "No docker credentials provided. Skip uploading ${REPONAME}/${IMGNAME}:${IMGTAG} to docker hub"; 
+fi;
