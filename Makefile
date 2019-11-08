@@ -3,8 +3,8 @@
 
 REPONAME = openebs
 IMGNAME = helm-operator
-IMGTAG = v0.0.2
-OPENEBS_RELEASE_VERSION = 1.1.0
+IMGTAG = v0.0.3
+OPENEBS_RELEASE_VERSION = 1.3.0
 IS_DOCKER_INSTALLED = $(shell which docker >> /dev/null 2>&1; echo $$?)
 
 .PHONY: all

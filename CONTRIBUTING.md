@@ -9,6 +9,7 @@ Please consider the steps below while making the commits in order to achieve the
 
 - On newer OpenEBS releases: 
   - Update the makefile with the appropriate `OPENEBS_RELEASE_VERSION`
+  - Bump up the operator image
   - Create a new ClusterServiceVersion manifest under the `olm/OPENEBS_RELEASE_VERSION/` folder with the 
     appropriate modifications to the `version` keys, image of the helm-operator (in `deployments` section),
     the example CR spec under `alm-examples` annotation (important) and any other relevant metadata.
