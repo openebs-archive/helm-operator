@@ -475,7 +475,7 @@ spec:
             path: analytics
           - description: Enable Default Storage Class Installation
             displayName: defaultStorageConfig
-            path: apiserver
+            path: defaultStorageConfig
         statusDescriptors: 
           - description: ClusterServiceVersion Condition
             displayName: Conditions
