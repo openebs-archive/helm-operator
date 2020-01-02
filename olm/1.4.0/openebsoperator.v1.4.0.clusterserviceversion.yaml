@@ -248,6 +248,18 @@ spec:
 
     * OpenEBS welcomes your feedback and contributions in any form possible. [Join our Community](https://openebs.org/community)
 
+    ## Workarounds
+
+    * No storage is created when using openebs-hostpath StorageClass and Openshift 4.2. Error: `mkdir: can't create directory '/data/pvc-<uuid>': Permission denied`.
+
+      - Set permissive selinux in nodes or
+      - Modify init-pvc-<uuid> and edit: `securityContext: {}`:
+      ```yaml
+      spec:
+        securityContext:
+          privileged: true
+      ```
+
     ## License
  
     OpenEBS is distributed under the 

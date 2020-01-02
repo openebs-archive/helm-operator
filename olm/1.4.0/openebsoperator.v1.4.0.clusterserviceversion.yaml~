@@ -1,13 +1,13 @@
 apiVersion: operators.coreos.com/v1alpha1
 kind: ClusterServiceVersion
 metadata:
-  name: openebsoperator.v1.3.0
+  name: openebsoperator.v1.4.0
   namespace: default 
   annotations:
     capabilities: Basic Install
     categories: "Storage"
-    containerImage: index.docker.io/openebs/helm-operator:v0.0.3
-    createdAt: 2019-11-07T20:56:28Z
+    containerImage: index.docker.io/openebs/helm-operator:v0.0.4
+    createdAt: 2019-12-12T18:48:34Z
     repository: https://github.com/openebs/helm-operator
     certified: "false"
     support: https://slack.openebs.io/
@@ -29,14 +29,14 @@ metadata:
               "name": "openebs-maya-operator"
             },
             "release": {
-              "version": "1.3.0"
+              "version": "1.4.0"
             },
             "image": {
               "pullPolicy": "IfNotPresent"
             },
             "apiserver": {
               "image": "quay.io/openebs/m-apiserver",
-              "imageTag": "1.3.0",
+              "imageTag": "1.4.0",
               "replicas": "1",
               "ports": {
                  "externalPort": "5656",
@@ -55,7 +55,7 @@ metadata:
              },
             "provisioner": {
               "image": "quay.io/openebs/openebs-k8s-provisioner",
-              "imageTag": "1.3.0",
+              "imageTag": "1.4.0",
               "replicas": "1",
               "healthCheck": {
                 "initialDelaySeconds": "30",
@@ -64,7 +64,7 @@ metadata:
             },
             "localprovisioner": {
               "image": "quay.io/openebs/provisioner-localpv",
-              "imageTag": "1.3.0",
+              "imageTag": "1.4.0",
               "helperImage": "quay.io/openebs/openebs-tools",
               "helperImageTag": "3.8",
               "replicas": "1",
@@ -77,11 +77,11 @@ metadata:
             "snapshotOperator": {
                "controller": {
                  "image": "quay.io/openebs/snapshot-controller",
-                 "imageTag": "1.3.0"
+                 "imageTag": "1.4.0"
                },
                "provisioner": {
                  "image": "quay.io/openebs/snapshot-provisioner",
-                 "imageTag": "1.3.0"
+                 "imageTag": "1.4.0"
                },
                "replicas": "1",
                "upgradeStrategy": "Recreate",
@@ -92,7 +92,7 @@ metadata:
             },
             "ndm": {
               "image": "quay.io/openebs/node-disk-manager-amd64",
-              "imageTag": "v0.4.3",
+              "imageTag": "v0.4.4",
               "sparse": {
                 "path": "/var/openebs/sparse",
                 "size": "10737418240",
@@ -113,7 +113,7 @@ metadata:
             },
             "ndmOperator": {
               "image": "quay.io/openebs/node-disk-operator-amd64",
-              "imageTag": "v0.4.3", 
+              "imageTag": "v0.4.4", 
               "replicas": "1", 
               "upgradeStrategy": "Recreate",
               "readinessCheck": {
@@ -126,39 +126,39 @@ metadata:
             },
             "webhook": {
               "image": "quay.io/openebs/admission-server",
-              "imageTag": "1.3.0",
+              "imageTag": "1.4.0",
               "generateTLS": "true",
               "replicas": "1"
             },
             "jiva": {
               "image": "quay.io/openebs/jiva",
-              "imageTag": "1.3.0",
+              "imageTag": "1.4.0",
               "replicas": "3"
               "defaultStoragePath": "/var/openebs"
             },
             "cstor": {
               "pool": {
                 "image": "quay.io/openebs/cstor-pool",
-                "imageTag": "1.3.0"
+                "imageTag": "1.4.0"
               },
               "poolMgmt": {
                 "image": "quay.io/openebs/cstor-pool-mgmt",
-                "imageTag": "1.3.0"
+                "imageTag": "1.4.0"
               },
               "target": {
                 "image": "quay.io/openebs/cstor-istgt",
-                "imageTag": "1.3.0"
+                "imageTag": "1.4.0"
               },
               "volumeMgmt": {
                 "image": "quay.io/openebs/cstor-volume-mgmt",
-                "imageTag": "1.3.0"
+                "imageTag": "1.4.0"
               }
             },
             "policies": {
               "monitoring": {
                 "enabled": "true",
                 "image": "quay.io/openebs/m-exporter",
-                "imageTag": "1.3.0"
+                "imageTag": "1.4.0"
               }
             },
             "analytics": {
@@ -252,8 +252,8 @@ spec:
 
     * No storage is created when using openebs-hostpath StorageClass and Openshift 4.2. Error: `mkdir: can't create directory '/data/pvc-<uuid>': Permission denied`.
 
-      - Set permissive selinux in nodes or
-      - Modify init-pvc-<uuid> and edit: `securityContext: {}`:
+      1. Set permissive selinux in nodes or
+      2. Modify init-pvc-<uuid> and edit: `securityContext: {}`:
       ```yaml
       spec:
         securityContext:
@@ -268,7 +268,7 @@ spec:
   keywords:
     - OpenEBS
     - ContainerAttachedStorage
-  version: 1.3.0
+  version: 1.4.0
   maturity: alpha
   maintainers:
     - name: kmova
@@ -276,7 +276,7 @@ spec:
   minKubeVersion: 1.12.0
   provider:
     name: MayaData
-  replaces: openebsoperator.v1.1.0
+  replaces: openebsoperator.v1.3.0
   links:
     - name: OpenEBS Website
       url: https://openebs.io
@@ -392,7 +392,7 @@ spec:
               spec:
                 containers:
                 - name: openebs-operator
-                  image: index.docker.io/openebs/helm-operator:v0.0.3
+                  image: index.docker.io/openebs/helm-operator:v0.0.4
                   imagePullPolicy: Always
                   env:
                   - name: WATCH_NAMESPACE
