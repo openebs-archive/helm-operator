@@ -45,3 +45,4 @@ Example of OpenEBSInstallTemplate CR can be found [here](deploy/crds/openebs_v1a
      | v0.0.2               | 1.1.0                 |
      | v0.0.3               | 1.3.0                 |
      | v0.0.4               | 1.4.0                 |
+     | v0.0.5               | 1.5.0                 |
