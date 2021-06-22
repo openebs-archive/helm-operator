@@ -27,7 +27,7 @@ build:
 	@echo "Fetch openebs helm chart from stable"
 	@echo "------------------------------------"
      
-#	helm init --client-only
+	helm init --client-only
 	helm fetch openebs/openebs --version $(OPENEBS_RELEASE_VERSION) --untar --untardir helm-charts/
 	ls helm-charts/
 	./hack/pre-install
