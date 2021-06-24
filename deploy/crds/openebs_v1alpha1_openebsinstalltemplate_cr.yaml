@@ -38,7 +38,7 @@ spec:
     tolerations: []
     affinity: {}
     healthCheck:
-      initialDelaySeconds: 50
+      initialDelaySeconds: 30
       periodSeconds: 60
   
   provisioner:
@@ -74,6 +74,7 @@ spec:
       image: "quay.io/openebs/snapshot-provisioner"
       imageTag: "2.10.0"
     replicas: 1
+    enableLeaderElection: true
     upgradeStrategy: "Recreate"
     nodeSelector: {}
     tolerations: []
@@ -83,28 +84,37 @@ spec:
       periodSeconds: 60
   
   ndm:
-    image: "quay.io/openebs/node-disk-manager-amd64"
-    imageTag: "v0.4.5"
+    image: "quay.io/openebs/node-disk-manager"
+    imageTag: "v1.5.0"
     sparse:
       path: "/var/openebs/sparse"
       size: "10737418240"
-      count: "1"
+      count: "0"
     filters:
+      enableOsDiskExcludeFilter: true
+      osDiskExcludePaths: "/,/etc/hosts,/boot"
+      enableVendorFilter: true
       excludeVendors: "CLOUDBYT,OpenEBS"
       includePaths: ""
-      excludePaths: "loop,fd0,sr0,/dev/ram,/dev/dm-,/dev/md"
+      enablePathFilter: true
+      excludePaths: "/dev/loop,/dev/fd0,/dev/sr0,/dev/ram,/dev/dm-,/dev/md,/dev/rbd,/dev/zd"
     nodeSelector: {}
+    probes:
+      enableSeachest: false
     healthCheck:
       initialDelaySeconds: 30
       periodSeconds: 60
 
   ndmOperator:
-    image: "quay.io/openebs/node-disk-operator-amd64"
-    imageTag: "v0.4.5"
+    image: "quay.io/openebs/node-disk-operator"
+    imageTag: "v1.5.0"
     replicas: 1
     upgradeStrategy: Recreate
     nodeSelector: {}
     tolerations: []
+    healthCheck:
+      initialDelaySeconds: 30
+      periodSeconds: 60
     readinessCheck:
       initialDelaySeconds: 4
       periodSeconds: 10
@@ -114,18 +124,32 @@ spec:
 
 
   webhook:
+    enabled: true
     image: "quay.io/openebs/admission-server"
     imageTag: "2.10.0"
+    failurePolicy: "Fail"
     generateTLS: true
     replicas: 1
+    healthCheck:
+      initialDelaySeconds: 30
+      periodSeconds: 60
     nodeSelector: {}
     tolerations: []
     affinity: {}
-  
+    hostNetwork: false
+
   jiva:
     image: "quay.io/openebs/jiva"
     imageTag: "2.10.0"
     replicas: 3
+    defaultStoragePath: "/var/openebs"
+    enabled: false
+    openebsLocalpv:
+      enabled: false
+    localpv-provisioner:
+      openebsNDM:
+        enabled: false
+
   
   cstor:
     pool:
