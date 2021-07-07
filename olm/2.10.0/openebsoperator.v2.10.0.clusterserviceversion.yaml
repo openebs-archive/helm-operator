@@ -6,7 +6,7 @@ metadata:
   annotations:
     capabilities: Basic Install
     categories: "Storage"
-    containerImage: index.docker.io/openebs/helm-operator:v0.0.5
+    containerImage: index.docker.io/openebs/helm-operator:v0.0.6
     createdAt: 2020-01-03T18:48:34Z
     repository: https://github.com/openebs/helm-operator
     certified: "false"
@@ -22,19 +22,22 @@ metadata:
           },
           "spec": {
             "rbac": {
-              "create": "true"
+              "create": "true",
+              "pspEnabled": "false"
             },
             "serviceAccount": {
               "create": "true",
-              "name": "openebs-maya-operator"
+              "name": ""
             },
             "release": {
               "version": "2.10.0"
             },
             "image": {
-              "pullPolicy": "IfNotPresent"
+              "pullPolicy": "IfNotPresent",
+              "repository":""
             },
             "apiserver": {
+              "enabled": "true",
               "image": "quay.io/openebs/m-apiserver",
               "imageTag": "2.10.0",
               "replicas": "1",
@@ -53,20 +56,25 @@ metadata:
             "defaultStorageConfig": {
                "enabled": "true"
              },
+            "varDirectoryPath": {
+               "baseDir": "/var/openebs"
+             },
             "provisioner": {
+              "enabled": "true",
               "image": "quay.io/openebs/openebs-k8s-provisioner",
               "imageTag": "2.10.0",
               "replicas": "1",
+              "enableLeaderElection": "true",
+              "patchJivaNodeAffinity": "enabled",
               "healthCheck": {
                 "initialDelaySeconds": "30",
                 "periodSeconds": "60"
               }
             },
             "localprovisioner": {
+              "enabled": "true",
               "image": "quay.io/openebs/provisioner-localpv",
               "imageTag": "2.10.0",
-              "helperImage": "quay.io/openebs/linux-utils",
-              "helperImageTag": "2.10.0",
               "replicas": "1",
               "basePath": "/var/openebs/local",
               "healthCheck": {
@@ -75,6 +83,7 @@ metadata:
               }
             },
             "snapshotOperator": {
+               "enabled": true,
                "controller": {
                  "image": "quay.io/openebs/snapshot-controller",
                  "imageTag": "2.10.0"
@@ -84,6 +93,7 @@ metadata:
                  "imageTag": "2.10.0"
                },
                "replicas": "1",
+               "enableLeaderElection": "true",
                "upgradeStrategy": "Recreate",
                "healthCheck": {
                  "initialDelaySeconds": "30",
@@ -91,17 +101,21 @@ metadata:
                }
             },
             "ndm": {
-              "image": "quay.io/openebs/node-disk-manager-amd64",
-              "imageTag": "v0.4.5",
+              "enabled": "true",
+              "image": "quay.io/openebs/node-disk-manager",
+              "imageTag": "1.5.0",
               "sparse": {
                 "path": "/var/openebs/sparse",
                 "size": "10737418240",
                 "count": "0"
               },
               "filters": {
+                "enableOsDiskExcludeFilter": "true",
+                "osDiskExcludePaths": "/,/etc/hosts,/boot",
+                "enableVendorFilter": "true",
                 "excludeVendors": "CLOUDBYT,OpenEBS",
                 "includePaths": "",
-                "excludePaths": "loop,fd0,sr0,/dev/ram,/dev/dm-,/dev/md"
+                "excludePaths": "/dev/loop,/dev/fd0,/dev/sr0,/dev/ram,/dev/dm-,/dev/md,/dev/rbd,/dev/zd"
               },
               "probes": {
                  "enableSeachest": "false"
@@ -112,10 +126,14 @@ metadata:
               }
             },
             "ndmOperator": {
-              "image": "quay.io/openebs/node-disk-operator-amd64",
-              "imageTag": "v0.4.5", 
+              "image": "quay.io/openebs/node-disk-operator",
+              "imageTag": "1.5.0", 
               "replicas": "1", 
               "upgradeStrategy": "Recreate",
+              "healthCheck": {
+                "initialDelaySeconds": 30,
+                "periodSeconds": 60
+              },
               "readinessCheck": {
                 "initialDelaySeconds": "4",
                 "periodSeconds": "10",
@@ -125,16 +143,55 @@ metadata:
               "cleanupImageTag": "2.10.0"
             },
             "webhook": {
+              "enabled": "true",
               "image": "quay.io/openebs/admission-server",
               "imageTag": "2.10.0",
-              "generateTLS": "true",
-              "replicas": "1"
+              "failurePolicy": "Fail",
+              "healthCheck": {
+                "initialDelaySeconds": 30,
+                "periodSeconds": 60 
+              },
+              "replicas": "1",
+              "hostNetwork": "false"
             },
+            "helper": { 
+              "image": "quay.io/openebs/linux-utils",
+              "helperImageTag": "2.10.0"
+            },
+            "featureGates":{
+              "enabled": "true",
+              "GPTBasedUUID": {
+                "enabled": "true",
+                "featureGateFlag": "GPTBasedUUID"
+              },
+              "APIService": {
+                "enabled": "false",
+                "featureGateFlag": "APIService",
+                "address": "0.0.0.0:9115"
+              },
+              "USeOSDisk": {
+                "enabled": "true",
+                "featureGateFlag": "UseOSDisk"
+              }
+            },
+            "crd": {
+              "enableInstall": "true"
+            },
+
             "jiva": {
               "image": "quay.io/openebs/jiva",
               "imageTag": "2.10.0",
-              "replicas": "3"
-              "defaultStoragePath": "/var/openebs"
+              "replicas": "3",
+              "defaultStoragePath": "/var/openebs",
+              "enabled": "false",
+              "openebsLocalpv": {
+                "enabled": "false"
+              },
+              "localpv-provisioner":{
+                "openebsNDM":{
+                  "enabled": "false"
+                }
+              }
             },
             "cstor": {
               "pool": {
@@ -152,7 +209,11 @@ metadata:
               "volumeMgmt": {
                 "image": "quay.io/openebs/cstor-volume-mgmt",
                 "imageTag": "2.10.0"
-              }
+              },
+             "enabled": "false",
+             "openebsNDM":{
+               "enabled": "false"
+             }
             },
             "policies": {
               "monitoring": {
