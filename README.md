@@ -22,7 +22,7 @@ Example of OpenEBSInstallTemplate CR can be found [here](deploy/crds/openebs_v1a
   - Workaround: Create ns "openebs" or any desired before applying the CR
 
 - Uninstall of a failed helm release (say, wrong spec) will be stuck. 
-  - Workaround: finalizer has to be removed manually
+  - Workaround: finalizer has to be removed manually 
   - Snippet: 
   ```
     status:
