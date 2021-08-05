@@ -28,7 +28,7 @@ build:
 	@echo "------------------------------------"
      
 	helm init --client-only
-        helm repo add openebs https://openebs.github.io/charts
+	helm repo add openebs https://openebs.github.io/charts
 	helm fetch openebs/openebs --version $(OPENEBS_RELEASE_VERSION) --untar --untardir helm-charts/
 	ls helm-charts/
 	./hack/pre-install
