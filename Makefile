@@ -27,7 +27,6 @@ build:
 	@echo "Fetch openebs helm chart from stable"
 	@echo "------------------------------------"
      
-	helm init --client-only
 	helm repo add openebs https://openebs.github.io/charts
 	helm fetch openebs/openebs --version $(OPENEBS_RELEASE_VERSION) --untar --untardir helm-charts/
 	ls helm-charts/
