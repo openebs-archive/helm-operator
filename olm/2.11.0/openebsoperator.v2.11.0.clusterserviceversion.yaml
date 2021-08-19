@@ -50,7 +50,7 @@ metadata:
                 "internalPort": 5656
               },
               "sparse": {
-                "enabled": "false"
+                "enabled": false
               },
               "healthCheck": {
                 "initialDelaySeconds": 30,
@@ -58,7 +58,7 @@ metadata:
               }
             },
             "defaultStorageConfig": {
-              "enabled": "true"
+              "enabled": true
             },
             "varDirectoryPath": {
               "baseDir": "/var/openebs"
