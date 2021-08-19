@@ -1,146 +1,153 @@
 apiVersion: openebs.io/v1alpha1
 kind: OpenEBSInstallTemplate
 metadata:
-  name: oebs 
+  name: oebs
   namespace: openebs
 spec:
   # Default values copied from <project_dir>/helm-charts/openebs/values.yaml
-  
   # Default values for openebs.
   # This is a YAML-formatted file.
   # Declare variables to be passed into your templates.
-  
   rbac:
-    # Specifies whether RBAC resources should be created
+  # Specifies whether RBAC resources should be created
     create: true
-  
+    pspEnabled: false
+    kyvernoEnabled: false
   serviceAccount:
     create: true
-    name: "openebs-maya-operator"
-
+    name: ''
   release:
-    # "openebs.io/version" label for control plane components
-    version: "2.10.0"
-  
+  # "openebs.io/version" label for control plane components
+    version: 2.11.0
+  legacy:
+    enabled: true
   image:
     pullPolicy: IfNotPresent
-  
+    repository: ''
   apiserver:
-    image: "quay.io/openebs/m-apiserver"
-    imageTag: "2.10.0"
+    enabled: true
+    image: quay.io/openebs/m-apiserver
+    imageTag: 2.11.0
     replicas: 1
     ports:
       externalPort: 5656
       internalPort: 5656
     sparse:
-      enabled: "false"
-    nodeSelector: {}
-    tolerations: []
-    affinity: {}
+      enabled: 'false'
     healthCheck:
       initialDelaySeconds: 30
       periodSeconds: 60
-  
+  defaultStorageConfig:
+    enabled: 'true'
+  varDirectoryPath:
+    baseDir: "/var/openebs"
   provisioner:
-    image: "quay.io/openebs/openebs-k8s-provisioner"
-    imageTag: "2.10.0"
-    replicas: 1
-    nodeSelector: {}
-    tolerations: []
-    affinity: {}
-    healthCheck:
-      initialDelaySeconds: 30
-      periodSeconds: 60
-
-  localprovisioner:
-    image: "quay.io/openebs/provisioner-localpv"
-    imageTag: "2.10.0"
-    helperImage: "quay.io/openebs/linux-utils"
-    helperImageTag: "2.10.0"
-    replicas: 1
-    basePath: "/var/openebs/local"
-    nodeSelector: {}
-    tolerations: []
-    affinity: {}
-    healthCheck:
-      initialDelaySeconds: 30
-      periodSeconds: 60
-  
-  snapshotOperator:
-    controller:
-      image: "quay.io/openebs/snapshot-controller"
-      imageTag: "2.10.0"
-    provisioner:
-      image: "quay.io/openebs/snapshot-provisioner"
-      imageTag: "2.10.0"
+    enabled: true
+    image: quay.io/openebs/openebs-k8s-provisioner
+    imageTag: 2.11.0
     replicas: 1
     enableLeaderElection: true
-    upgradeStrategy: "Recreate"
-    nodeSelector: {}
-    tolerations: []
-    affinity: {}
+    patchJivaNodeAffinity: enabled
     healthCheck:
       initialDelaySeconds: 30
       periodSeconds: 60
-  
+  localprovisioner:
+    enabled: true
+    image: quay.io/openebs/provisioner-localpv
+    imageTag: 2.11.1
+    replicas: '1'
+    basePath: "/var/openebs/local"
+    enableLeaderElection: true
+    healthCheck:
+      initialDelaySeconds: '30'
+      periodSeconds: '60'
+  snapshotOperator:
+    enabled: true
+    controller:
+      image: quay.io/openebs/snapshot-controller
+      imageTag: 2.11.0
+    provisioner:
+      image: quay.io/openebs/snapshot-provisioner
+      imageTag: 2.11.0
+    replicas: 1
+    enableLeaderElection: true
+    upgradeStrategy: Recreate
+    healthCheck:
+      initialDelaySeconds: 30
+      periodSeconds: 60
   ndm:
-    image: "quay.io/openebs/node-disk-manager"
-    imageTag: "1.5.0"
+    enabled: true
+    image: quay.io/openebs/node-disk-manager
+    imageTag: 1.6.0
     sparse:
       path: "/var/openebs/sparse"
-      size: "10737418240"
-      count: "0"
+      size: '10737418240'
+      count: '0'
     filters:
       enableOsDiskExcludeFilter: true
       osDiskExcludePaths: "/,/etc/hosts,/boot"
-      enableVendorFilter: true
-      excludeVendors: "CLOUDBYT,OpenEBS"
-      includePaths: ""
+      enableVendorFilter: 'true'
+      excludeVendors: CLOUDBYT,OpenEBS
       enablePathFilter: true
+      includePaths: ''
       excludePaths: "/dev/loop,/dev/fd0,/dev/sr0,/dev/ram,/dev/dm-,/dev/md,/dev/rbd,/dev/zd"
-    nodeSelector: {}
     probes:
       enableSeachest: false
     healthCheck:
       initialDelaySeconds: 30
       periodSeconds: 60
-
   ndmOperator:
-    image: "quay.io/openebs/node-disk-operator"
-    imageTag: "1.5.0"
+    image: quay.io/openebs/node-disk-operator
+    imageTag: 1.6.0
     replicas: 1
     upgradeStrategy: Recreate
-    nodeSelector: {}
-    tolerations: []
     healthCheck:
-      initialDelaySeconds: 30
-      periodSeconds: 60
+      initialDelaySeconds: 15
+      periodSeconds: 20
     readinessCheck:
-      initialDelaySeconds: 4
-      periodSeconds: 10
-      failureThreshold: 1
-    cleanupImage: "quay.io/openebs/linux-utils"
-    cleanupImageTag: "2.10.0"
-
-
+      initialDelaySeconds: 5
+      periodSeconds: 20
   webhook:
     enabled: true
-    image: "quay.io/openebs/admission-server"
-    imageTag: "2.10.0"
-    failurePolicy: "Fail"
-    generateTLS: true
+    image: quay.io/openebs/admission-server
+    imageTag: 2.11.0
+    failurePolicy: Fail
     replicas: 1
     healthCheck:
       initialDelaySeconds: 30
       periodSeconds: 60
-    nodeSelector: {}
-    tolerations: []
-    affinity: {}
     hostNetwork: false
-
+  helper:
+    image: quay.io/openebs/linux-utils
+    helperImageTag: 2.11.0
+  featureGates:
+    enabled: true
+    GPTBasedUUID:
+      enabled: true
+      featureGateFlag: GPTBasedUUID
+    APIService:
+      enabled: false
+      featureGateFlag: APIService
+      address: 0.0.0.0:9115
+    USeOSDisk:
+      enabled: false
+      featureGateFlag: UseOSDisk
+    MountChangeDetection:
+      enabled: false
+      featureGateFlag: MountChangeDetection
+  crd:
+    enableInstall: true
+  policies:
+    monitoring:
+      enabled: true
+      image: quay.io/openebs/m-exporter
+      imageTag: 2.11.0
+  analytics:
+    enabled: true
+    pingInterval: 24h
   jiva:
-    image: "quay.io/openebs/jiva"
-    imageTag: "2.10.0"
+    image: quay.io/openebs/jiva
+    imageTag: 2.11.0
     replicas: 3
     defaultStoragePath: "/var/openebs"
     enabled: false
@@ -149,30 +156,30 @@ spec:
     localpv-provisioner:
       openebsNDM:
         enabled: false
-
-  
   cstor:
     pool:
-      image: "quay.io/openebs/cstor-pool"
-      imageTag: "2.10.0"
+      image: quay.io/openebs/cstor-pool
+      imageTag: 2.11.0
     poolMgmt:
-      image: "quay.io/openebs/cstor-pool-mgmt"
-      imageTag: "2.10.0"
+      image: quay.io/openebs/cstor-pool-mgmt
+      imageTag: 2.11.0
     target:
-      image: "quay.io/openebs/cstor-istgt"
-      imageTag: "2.10.0"
+      image: quay.io/openebs/cstor-istgt
+      imageTag: 2.11.0
     volumeMgmt:
-      image: "quay.io/openebs/cstor-volume-mgmt"
-      imageTag: "2.10.0"
-  
-  policies:
-    monitoring:
-      enabled: true
-      image: "quay.io/openebs/m-exporter"
-      imageTag: "2.10.0"
-  
-  analytics:
-    enabled: true
-    # Specify in hours the duration after which a ping event needs to be sent.
-    pingInterval: "24h"
-  
+      image: quay.io/openebs/cstor-volume-mgmt
+      imageTag: 2.11.0
+    enabled: false
+    openebsNDM:
+      enabled: false
+  openebs-ndm:
+    enabled: false
+  localpv-provisioner:
+    enabled: false
+    openebsNDM:
+      enabled: false
+  zfs-localpv:
+    enabled: false
+  lvm-localpv:
+    enabled: false
+
