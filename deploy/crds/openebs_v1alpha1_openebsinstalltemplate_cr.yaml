@@ -4,16 +4,21 @@ metadata:
   name: oebs
   namespace: openebs
 spec:
+  # Default values copied from <project_dir>/helm-charts/openebs/values.yaml
+  # Default values for openebs.
+  # This is a YAML-formatted file.
+  # Declare variables to be passed into your templates.
   rbac:
+  # Specifies whether RBAC resources should be created
     create: true
     pspEnabled: false
     kyvernoEnabled: false
   serviceAccount:
     create: true
     name: ''
-  imagePullSecrets: [ ]
   release:
-    version: 2.12.0
+  # "openebs.io/version" label for control plane components
+    version: 2.11.0
   legacy:
     enabled: true
   image:
@@ -22,76 +27,58 @@ spec:
   apiserver:
     enabled: true
     image: quay.io/openebs/m-apiserver
-    imageTag: 2.12.0
+    imageTag: 2.11.0
     replicas: 1
     ports:
       externalPort: 5656
       internalPort: 5656
     sparse:
-      enabled: false
-    nodeSelector: { }
-    tolerations: [ ]
-    affinity: { }
+      enabled: 'false'
     healthCheck:
       initialDelaySeconds: 30
       periodSeconds: 60
-    resources: { }
   defaultStorageConfig:
-    enabled: true
+    enabled: 'true'
   varDirectoryPath:
     baseDir: "/var/openebs"
   provisioner:
     enabled: true
     image: quay.io/openebs/openebs-k8s-provisioner
-    imageTag: 2.12.0
+    imageTag: 2.11.0
     replicas: 1
     enableLeaderElection: true
     patchJivaNodeAffinity: enabled
-    nodeSelector: { }
-    tolerations: [ ]
-    affinity: { }
     healthCheck:
       initialDelaySeconds: 30
       periodSeconds: 60
-    resources: { }
   localprovisioner:
     enabled: true
     image: quay.io/openebs/provisioner-localpv
-    imageTag: 2.12.0
-    replicas: 1
+    imageTag: 2.11.1
+    replicas: '1'
     basePath: "/var/openebs/local"
-    waitForBDBindTimeoutRetryCount: '12'
-    nodeSelector: { }
-    tolerations: [ ]
-    affinity: { }
     enableLeaderElection: true
     healthCheck:
       initialDelaySeconds: '30'
       periodSeconds: '60'
-    resources: { }
   snapshotOperator:
     enabled: true
     controller:
       image: quay.io/openebs/snapshot-controller
-      imageTag: 2.12.0
-      resources: { }
+      imageTag: 2.11.0
     provisioner:
       image: quay.io/openebs/snapshot-provisioner
-      imageTag: 2.12.0
-      resources: { }
+      imageTag: 2.11.0
     replicas: 1
     enableLeaderElection: true
     upgradeStrategy: Recreate
-    nodeSelector: { }
-    tolerations: [ ]
-    affinity: { }
     healthCheck:
       initialDelaySeconds: 30
       periodSeconds: 60
   ndm:
     enabled: true
     image: quay.io/openebs/node-disk-manager
-    imageTag: 1.6.1
+    imageTag: 1.6.0
     sparse:
       path: "/var/openebs/sparse"
       size: '10737418240'
@@ -99,68 +86,40 @@ spec:
     filters:
       enableOsDiskExcludeFilter: true
       osDiskExcludePaths: "/,/etc/hosts,/boot"
-      enableVendorFilter: true
+      enableVendorFilter: 'true'
       excludeVendors: CLOUDBYT,OpenEBS
       enablePathFilter: true
       includePaths: ''
       excludePaths: "/dev/loop,/dev/fd0,/dev/sr0,/dev/ram,/dev/dm-,/dev/md,/dev/rbd,/dev/zd"
     probes:
       enableSeachest: false
-    nodeSelector: { }
-    tolerations: [ ]
     healthCheck:
       initialDelaySeconds: 30
       periodSeconds: 60
-    resources: { }
   ndmOperator:
-    enabled: true
     image: quay.io/openebs/node-disk-operator
-    imageTag: 1.6.1
+    imageTag: 1.6.0
     replicas: 1
     upgradeStrategy: Recreate
-    nodeSelector: { }
-    tolerations: [ ]
     healthCheck:
       initialDelaySeconds: 15
       periodSeconds: 20
     readinessCheck:
       initialDelaySeconds: 5
       periodSeconds: 20
-    resources: { }
-  ndmExporter:
-    enabled: false
-    image:
-      registry:
-      repository: openebs/node-disk-exporter
-      pullPolicy: IfNotPresent
-      tag: 1.6.1
-    nodeExporter:
-      name: ndm-node-exporter
-      podLabels:
-        name: openebs-ndm-node-exporter
-      metricsPort: 9101
-    clusterExporter:
-      name: ndm-cluster-exporter
-      podLabels:
-        name: openebs-ndm-cluster-exporter
-      metricsPort: 9100
   webhook:
     enabled: true
     image: quay.io/openebs/admission-server
-    imageTag: 2.12.0
+    imageTag: 2.11.0
     failurePolicy: Fail
     replicas: 1
     healthCheck:
       initialDelaySeconds: 30
       periodSeconds: 60
-    nodeSelector: { }
-    tolerations: [ ]
-    affinity: { }
     hostNetwork: false
-    resources: { }
   helper:
     image: quay.io/openebs/linux-utils
-    helperImageTag: 2.12.0
+    helperImageTag: 2.11.0
   featureGates:
     enabled: true
     GPTBasedUUID:
@@ -182,13 +141,13 @@ spec:
     monitoring:
       enabled: true
       image: quay.io/openebs/m-exporter
-      imageTag: 2.12.0
+      imageTag: 2.11.0
   analytics:
     enabled: true
     pingInterval: 24h
   jiva:
     image: quay.io/openebs/jiva
-    imageTag: 2.12.1
+    imageTag: 2.11.0
     replicas: 3
     defaultStoragePath: "/var/openebs"
     enabled: false
@@ -200,16 +159,16 @@ spec:
   cstor:
     pool:
       image: quay.io/openebs/cstor-pool
-      imageTag: 2.12.0
+      imageTag: 2.11.0
     poolMgmt:
       image: quay.io/openebs/cstor-pool-mgmt
-      imageTag: 2.12.0
+      imageTag: 2.11.0
     target:
       image: quay.io/openebs/cstor-istgt
-      imageTag: 2.12.0
+      imageTag: 2.11.0
     volumeMgmt:
       image: quay.io/openebs/cstor-volume-mgmt
-      imageTag: 2.12.0
+      imageTag: 2.11.0
     enabled: false
     openebsNDM:
       enabled: false
@@ -223,9 +182,4 @@ spec:
     enabled: false
   lvm-localpv:
     enabled: false
-  cleanup:
-    image:
-      registry: ''
-      repository: bitnami/kubectl
-      tag: ''
 
