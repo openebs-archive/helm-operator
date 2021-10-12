@@ -249,9 +249,9 @@ metadata:
             },
             "cleanup": {
               "image": {
-                "registry": '',
+                "registry": "",
                 "repository": "bitnami/kubectl",
-                "tag": ''
+                "tag": ""
               }
             }
           }
@@ -346,7 +346,7 @@ spec:
   keywords:
     - OpenEBS
     - ContainerAttachedStorage
-  version: 2.10.0
+  version: 2.11.0
   maturity: alpha
   maintainers:
     - name: kmova
@@ -354,7 +354,7 @@ spec:
   minKubeVersion: 1.12.0
   provider:
     name: MayaData
-  replaces: openebsoperator.v1.5.0
+  replaces: openebsoperator.v2.10.0
   links:
     - name: OpenEBS Website
       url: https://openebs.io
@@ -495,13 +495,13 @@ spec:
             version: v1
           - kind: ClusterRole
             name: ''
-            version: rbac.authorization.k8s.io/v1beta1
+            version: rbac.authorization.k8s.io/v1
           - kind: ClusterRoleBinding
             name: ''
-            version: rbac.authorization.k8s.io/v1beta1
+            version: rbac.authorization.k8s.io/v1
           - kind: Deployment
             name: ''
-            version: apps/v1beta1
+            version: apps/v1
           - kind: Service
             name: ''
             version: v1
@@ -510,13 +510,13 @@ spec:
             version: v1
           - kind: DaemonSet
             name: ''
-            version: extensions/v1beta1
+            version: apps/v1
           - kind: Secret
             name: ''
             version: v1
           - kind: ValidatingWebhookConfiguration
             name: ''
-            version: admissionregistration.k8s.io/v1beta1
+            version: admissionregistration.k8s.io/v1
         specDescriptors:
           - description: Image pull policy
             displayName: Image
