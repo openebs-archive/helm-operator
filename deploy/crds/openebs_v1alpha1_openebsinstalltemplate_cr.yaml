@@ -26,7 +26,7 @@ spec:
     repository: ''
   apiserver:
     enabled: true
-    image: quay.io/openebs/m-apiserver
+    image: openebs/m-apiserver
     imageTag: 2.12.2
     replicas: 1
     ports:
@@ -44,10 +44,10 @@ spec:
   defaultStorageConfig:
     enabled: 'true'
   varDirectoryPath:
-    baseDir: "/var/openebs"
+    baseDir: '/var/openebs'
   provisioner:
     enabled: true
-    image: quay.io/openebs/openebs-k8s-provisioner
+    image: openebs/openebs-k8s-provisioner
     imageTag: 2.12.2
     replicas: 1
     enableLeaderElection: true
@@ -61,13 +61,13 @@ spec:
     resources: { }
   localprovisioner:
     enabled: true
-    image: quay.io/openebs/provisioner-localpv
+    image: openebs/provisioner-localpv
     imageTag: 3.0.0
     replicas: 1
     enableLeaderElection: true
     enableDeviceClass: true
     enableHostpathClass: true
-    basePath: "/var/openebs/local"
+    basePath: '/var/openebs/local'
     waitForBDBindTimeoutRetryCount: '12'
     nodeSelector: { }
     tolerations: [ ]
@@ -79,11 +79,11 @@ spec:
   snapshotOperator:
     enabled: true
     controller:
-      image: quay.io/openebs/snapshot-controller
+      image: openebs/snapshot-controller
       imageTag: 2.12.2
       resources: { }
     provisioner:
-      image: quay.io/openebs/snapshot-provisioner
+      image: openebs/snapshot-provisioner
       imageTag: 2.12.2
       resources: { }
     replicas: 1
@@ -97,20 +97,20 @@ spec:
       periodSeconds: 60
   ndm:
     enabled: true
-    image: quay.io/openebs/node-disk-manager
+    image: openebs/node-disk-manager
     imageTag: 1.7.0
     sparse:
-      path: "/var/openebs/sparse"
+      path: '/var/openebs/sparse'
       size: '10737418240'
       count: '0'
     filters:
       enableOsDiskExcludeFilter: true
-      osDiskExcludePaths: "/,/etc/hosts,/boot"
+      osDiskExcludePaths: '/,/etc/hosts,/boot'
       enableVendorFilter: true
       excludeVendors: CLOUDBYT,OpenEBS
       enablePathFilter: true
       includePaths: ''
-      excludePaths: "/dev/loop,/dev/fd0,/dev/sr0,/dev/ram,/dev/dm-,/dev/md,/dev/rbd,/dev/zd"
+      excludePaths: '/dev/loop,/dev/fd0,/dev/sr0,/dev/ram,/dev/dm-,/dev/md,/dev/rbd,/dev/zd'
     probes:
       enableSeachest: false
     nodeSelector: { }
@@ -121,7 +121,7 @@ spec:
     resources: { }
   ndmOperator:
     enabled: true
-    image: quay.io/openebs/node-disk-operator
+    image: openebs/node-disk-operator
     imageTag: 1.7.0
     replicas: 1
     upgradeStrategy: Recreate
@@ -153,7 +153,7 @@ spec:
       metricsPort: 9100
   webhook:
     enabled: true
-    image: quay.io/openebs/admission-server
+    image: openebs/admission-server
     imageTag: 2.12.2
     failurePolicy: Fail
     replicas: 1
@@ -166,7 +166,7 @@ spec:
     hostNetwork: false
     resources: { }
   helper:
-    image: quay.io/openebs/linux-utils
+    image: openebs/linux-utils
     helperImageTag: 3.0.0
   featureGates:
     enabled: true
@@ -188,16 +188,16 @@ spec:
   policies:
     monitoring:
       enabled: true
-      image: quay.io/openebs/m-exporter
+      image: openebs/m-exporter
       imageTag: 2.12.2
   analytics:
     enabled: true
     pingInterval: 24h
   jiva:
-    image: quay.io/openebs/jiva
+    image: openebs/jiva
     imageTag: 2.12.2
     replicas: 3
-    defaultStoragePath: "/var/openebs"
+    defaultStoragePath: '/var/openebs'
     enabled: false
     openebsLocalpv:
       enabled: false
@@ -206,16 +206,16 @@ spec:
         enabled: false
   cstor:
     pool:
-      image: quay.io/openebs/cstor-pool
+      image: openebs/cstor-pool
       imageTag: 2.12.2
     poolMgmt:
-      image: quay.io/openebs/cstor-pool-mgmt
+      image: openebs/cstor-pool-mgmt
       imageTag: 2.12.2
     target:
-      image: quay.io/openebs/cstor-istgt
+      image: openebs/cstor-istgt
       imageTag: 2.12.2
     volumeMgmt:
-      image: quay.io/openebs/cstor-volume-mgmt
+      image: openebs/cstor-volume-mgmt
       imageTag: 2.12.2
     enabled: false
     openebsNDM:

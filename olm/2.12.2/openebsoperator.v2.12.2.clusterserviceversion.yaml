@@ -43,7 +43,7 @@ metadata:
             },
             "apiserver": {
               "enabled": true,
-              "image": "quay.io/openebs/m-apiserver",
+              "image": "openebs/m-apiserver",
               "imageTag": "2.12.2",
               "replicas": 1,
               "ports": {
@@ -70,7 +70,7 @@ metadata:
             },
             "provisioner": {
               "enabled": true,
-              "image": "quay.io/openebs/openebs-k8s-provisioner",
+              "image": "openebs/openebs-k8s-provisioner",
               "imageTag": "2.12.2",
               "replicas": 1,
               "enableLeaderElection": true,
@@ -86,7 +86,7 @@ metadata:
             },
             "localprovisioner": {
               "enabled": true,
-              "image": "quay.io/openebs/provisioner-localpv",
+              "image": "openebs/provisioner-localpv",
               "imageTag": "2.12.2",
               "replicas": 1,
               "enableLeaderElection": true,
@@ -106,12 +106,12 @@ metadata:
             "snapshotOperator": {
               "enabled": true,
               "controller": {
-                "image": "quay.io/openebs/snapshot-controller",
+                "image": "openebs/snapshot-controller",
                 "imageTag": "2.12.2",
                 "resources": {}
               },
               "provisioner": {
-                "image": "quay.io/openebs/snapshot-provisioner",
+                "image": "openebs/snapshot-provisioner",
                 "imageTag": "2.12.2",
                 "resources": {}
               },
@@ -128,7 +128,7 @@ metadata:
             },
             "ndm": {
               "enabled": true,
-              "image": "quay.io/openebs/node-disk-manager",
+              "image": "openebs/node-disk-manager",
               "imageTag": "1.6.1",
               "sparse": {
                 "path": "/var/openebs/sparse",
@@ -157,7 +157,7 @@ metadata:
             },
             "ndmOperator": {
               "enabled": true,
-              "image": "quay.io/openebs/node-disk-operator",
+              "image": "openebs/node-disk-operator",
               "imageTag": "1.6.1",
               "replicas": 1,
               "upgradeStrategy": "Recreate",
@@ -198,7 +198,7 @@ metadata:
             },
             "webhook": {
               "enabled": true,
-              "image": "quay.io/openebs/admission-server",
+              "image": "openebs/admission-server",
               "imageTag": "2.12.2",
               "failurePolicy": "Fail",
               "replicas": 1,
@@ -213,7 +213,7 @@ metadata:
               "resources": {}
             },
             "helper": {
-              "image": "quay.io/openebs/linux-utils",
+              "image": "openebs/linux-utils",
               "helperImageTag": "2.12.2"
             },
             "featureGates": {
@@ -242,7 +242,7 @@ metadata:
             "policies": {
               "monitoring": {
                 "enabled": true,
-                "image": "quay.io/openebs/m-exporter",
+                "image": "openebs/m-exporter",
                 "imageTag": "2.12.2"
               }
             },
@@ -251,7 +251,7 @@ metadata:
               "pingInterval": "24h"
             },
             "jiva": {
-              "image": "quay.io/openebs/jiva",
+              "image": "openebs/jiva",
               "imageTag": "2.12.2",
               "replicas": 3,
               "defaultStoragePath": "/var/openebs",
@@ -267,19 +267,19 @@ metadata:
             },
             "cstor": {
               "pool": {
-                "image": "quay.io/openebs/cstor-pool",
+                "image": "openebs/cstor-pool",
                 "imageTag": "2.12.2"
               },
               "poolMgmt": {
-                "image": "quay.io/openebs/cstor-pool-mgmt",
+                "image": "openebs/cstor-pool-mgmt",
                 "imageTag": "2.12.2"
               },
               "target": {
-                "image": "quay.io/openebs/cstor-istgt",
+                "image": "openebs/cstor-istgt",
                 "imageTag": "2.12.2"
               },
               "volumeMgmt": {
-                "image": "quay.io/openebs/cstor-volume-mgmt",
+                "image": "openebs/cstor-volume-mgmt",
                 "imageTag": "2.12.2"
               },
               "enabled": false,
@@ -373,7 +373,7 @@ spec:
 
     * Configure the OpenEBS service account on the openshift-operators namespace/project to use the privileged security context constraint.
 
-      **Note**: The serviceaccount name is same as the one specified in the `spec.serviceAccount.name` field of the OpenEBSInstallTemplate CR.
+      **Note**: The serviceaccount name is same as the one specified in the `spec.serviceAccount.name` field of the OpenEBSInstallTemplate CR, default value is set to openebs-maya-operator which can be modified before applying the template.
 
 
       ```
@@ -405,7 +405,7 @@ spec:
   keywords:
     - OpenEBS
     - ContainerAttachedStorage
-  version: 2.12.0
+  version: 2.12.2
   maturity: alpha
   maintainers:
     - name: kmova
@@ -529,7 +529,7 @@ spec:
               spec:
                 containers:
                 - name: openebs-operator
-                  image: index.docker.io/openebs/helm-operator:v0.0.5
+                  image: index.docker.io/openebs/helm-operator:v0.0.8
                   imagePullPolicy: Always
                   env:
                   - name: WATCH_NAMESPACE
@@ -554,13 +554,13 @@ spec:
             version: v1
           - kind: ClusterRole
             name: ''
-            version: rbac.authorization.k8s.io/v1beta1
+            version: rbac.authorization.k8s.io/v1
           - kind: ClusterRoleBinding
             name: ''
-            version: rbac.authorization.k8s.io/v1beta1
+            version: rbac.authorization.k8s.io/v1
           - kind: Deployment
             name: ''
-            version: apps/v1beta1
+            version: apps/v1
           - kind: Service
             name: ''
             version: v1
@@ -569,13 +569,13 @@ spec:
             version: v1
           - kind: DaemonSet
             name: ''
-            version: extensions/v1beta1
+            version: extensions/v1
           - kind: Secret
             name: ''
             version: v1
           - kind: ValidatingWebhookConfiguration
             name: ''
-            version: admissionregistration.k8s.io/v1beta1
+            version: admissionregistration.k8s.io/v1
         specDescriptors:
           - description: Image pull policy
             displayName: Image
